@@ -1,38 +1,50 @@
-Role Name
+lighthouse
 =========
 
-A brief description of the role goes here.
+This role installs and configures LightHouse, an open-source monitoring solution. It handles the installation of the required static files, the configuration of Nginx to serve the LightHouse web interface, and starts the Nginx service.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- The target system must have Nginx installed (or it will be installed by this role).
+- The lighthouse_version variable must be specified (default is latest).
+- A lighthouse_nginx.conf.j2 template for Nginx should be available for customization.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- lighthouse_version: Defines the version of LightHouse to install (default is latest).
+l- ighthouse_nginx_conf: Path to the Nginx configuration file to serve the LightHouse web interface (default is /etc/nginx/conf.d/lighthouse.conf).
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+nginx will be installed with this role.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+---
+- name: Install and configure LightHouse
+  hosts: your's hostname
+  become: true
+  roles:
+    - { role: GrizzlikovOleg.lighthouse-role, lighthouse_version: "latest", lighthouse_nginx_conf: "/etc/nginx/conf.d/lighthouse.conf" }
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+if you use req.yml
+
+- name: Install and configure LightHouse
+  hosts: your's hostname
+  gather_facts: true
+  roles:
+    - lighthouse
 
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+GrizzlikovOleg for Netology only
