@@ -1,0 +1,34 @@
+---
+- name: Download LightHouse static files
+  ansible.builtin.get_url:
+    url: "https://example.com/lighthouse-static.tar.gz"
+    dest: "/tmp/lighthouse-static.tar.gz"
+    mode: '0644'
+
+- name: Unarchive LightHouse static files
+  ansible.builtin.unarchive:
+    src: "/tmp/lighthouse-static.tar.gz"
+    dest: "/opt/lighthouse/"
+    remote_src: true
+
+- name: Install web server (Nginx or Apache)
+  ansible.builtin.yum:
+    name: nginx
+    state: present
+
+- name: Copy LightHouse configuration
+  ansible.builtin.template:
+    src: "lighthouse_config.j2"
+    dest: "/etc/nginx/sites-available/lighthouse"
+    mode: '0644'
+
+- name: Enable Nginx site for LightHouse
+  ansible.builtin.file:
+    src: "/etc/nginx/sites-available/lighthouse"
+    dest: "/etc/nginx/sites-enabled/lighthouse"
+    state: link
+
+- name: Restart Nginx to apply the configuration
+  ansible.builtin.systemd:
+    name: nginx
+    state: restarted
